@@ -1,8 +1,11 @@
 <?php
 
+
+
+
 return [
     
-    
+
     /*
     |--------------------------------------------------------------------------
     | PDO Fetch Style
@@ -54,16 +57,7 @@ return [
         ],
 
         
-        'mysql' => [
-        'driver'    => 'mysql',
-        'host'      => $host,
-        'database'  => $database,
-        'username'  => $username,
-        'password'  => $password,
-        'charset'   => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix'    => '',
-        ],
+
 
 
         'mysql' => [
