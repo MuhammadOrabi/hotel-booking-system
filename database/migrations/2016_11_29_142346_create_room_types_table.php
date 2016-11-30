@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableRoom extends Migration
+class CreateRoomTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateTableRoom extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function ($table) {
-            $table->integer('id');
-            $table->integer('avail');
-            $table->integer('floor');
-            $table->integer('type_id')
-                  ->on('room_types')
-                  ->onDelete('cascade');
+        Schema::create('room_types', function ($table) {
+            $table->increments('id');
+            $table->string('name', 255)->unique();
+            $table->longText('description');
+            $table->float('base_price');
+            $table->integer('max_occupancy');
             $table->date('created_at');
             $table->date('updated_at');
-            $table->unique(['floor', 'id']);
         });
     }
 
@@ -33,6 +31,6 @@ class CreateTableRoom extends Migration
      */
     public function down()
     {
-        Schema::drop('rooms');
+        Schema::dropIfExists('room_types');
     }
 }

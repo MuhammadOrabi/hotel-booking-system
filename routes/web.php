@@ -11,20 +11,33 @@
 |
 */
 
+
+
+
+
 Route::get('/', function () {
     return view('welcome');
 	
 });
 
+
+Route::post('/rooms', 'roomController@getRooms');
+
+Route::post('/type/rooms', 'roomController@getRoomsByType');
+
+Route::post('/book','roomController@bookView');
+
+Route::post('/res','roomController@book');
+
+					// Auth \\
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('/room/add', 'HomeController@addRoomView');
+Route::get('/rooms/settings', 'HomeController@RoomView');
 
 Route::post('/add/rooms', 'HomeController@addRoom');
-
-Route::get('/room/update', 'HomeController@updateRoomView');
 
 Route::post('/update/rooms', 'HomeController@updateRoom');
 
@@ -36,10 +49,8 @@ Route::get('/reservation/update', 'HomeController@resUpdateView');
 
 Route::post('/update/reservation', 'HomeController@updateRes');
 
-Route::post('/rooms', 'roomController@getRooms');
+Route::get('/types/settings','HomeController@TypeView');
 
-Route::post('/book','roomController@bookView');
+Route::post('/add/type','HomeController@addType');
 
-Route::post('/res','roomController@book');
-
-
+Route::post('/update/type','HomeController@updateType');

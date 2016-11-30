@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
+{{-- @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -8,6 +8,8 @@
                 <div class="panel-heading">Dashboard</div>
                 <div class="panel-body">
                     <div class="list-group">
+                        <a href="{{ url('/type/add') }}" class="list-group-item">Add Room Type</a>
+                        <a href="{{ url('/type/update') }}" class="list-group-item">Update room Type</a>
                         <a href="{{ url('/room/add') }}" class="list-group-item">Add Room</a>
                         <a href="{{ url('/room/update') }}" class="list-group-item">Update room</a>
                         <a href="{{ url('/reservation/update') }}" class="list-group-item">Cancel Reservations</a>
@@ -20,4 +22,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}

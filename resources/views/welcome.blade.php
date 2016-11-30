@@ -11,9 +11,9 @@
             </ul>
         </div>
     @endif
-    @if(isset($reservation))
-        <div class="alert alert-success" role="alert">
-            Room {{ $reservation->room_id }} is booked
+    @if (session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
     @endif
     

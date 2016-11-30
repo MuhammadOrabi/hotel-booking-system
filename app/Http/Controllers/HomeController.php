@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\del_reservation;
 use App\reservation;
 use App\room;
+use App\room_type;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -27,77 +28,75 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('admin.main');
     }
 
-    public function addRoomView()
+    public function RoomView()
     {
-        return view('addRoom');
+        $types = room_type::get();
+        return view('rooms_settings', compact('types'));
     }
-
+    
     public function addRoom(Request $request)
     {
         $this->validate($request, [
-            'id' => 'required|unique:rooms|max:10',
-            'name' => 'required',
-            'max' => 'required',
-            'description' => 'required',
-            'price' => 'required',
-            'status' => 'required|in:0,1',
+            'no' => 'required|integer',
+            'type_name' => 'required',
+            'active' => 'required|integer',
+            'floor' => 'required|integer',
         ]);
-
-        $room = new room();
-        $room->id = $request->id;
-        $room->name = $request->name;
-        $room->description = $request->description;
-        $room->max = $request->max;
-        $room->avail = $request->status;
-        $room->base_price = $request->price;
-        $room->save();
-
-        return view('addRoom', compact('room'));
-    }
-
-    public function updateRoomView()
-    {
-        return view('updateRoom');
+        if($request->active > $request->no){
+            $fail = "error Check active rooms number!!";
+            return redirect('/rooms/settings')->with('fail', $fail);
+        }
+        $room = room::where('floor',$request->floor)->orderBy('id', 'desc')->first();
+        $from = isset($room) ? $room->id + 1 : 1;
+        $type = room_type::where('name',$request->type_name)->first();
+        for ($i=0; $i < $request->no; $i++) { 
+            $room = new room();
+            $room->id = $from;
+            $room->floor = $request->floor;
+            $room->type_id = $type->id;
+            if($i < $request->active){
+                $room->avail = 1;
+            }else{
+                $room->avail = 0;
+            }
+            $room->save();
+            $from++;   
+        }
+        
+        $success = "The rooms has been added successfully!";
+        return redirect('/rooms/settings')->with('success', $success);
     }
 
     public function updateRoom(Request $request)
     {
         $this->validate($request, [
-            'id' => 'required|max:10',
+            'type_name' => 'required',
+            'floor' => 'required|exists:rooms,floor',
+            'id' => 'required|exists:rooms,id',
             'status' => 'required|in:0,1',
         ]);
-
-        $room = room::where('id',$request->id)->first();
-        if($request->name != null){
-            $room->name = $request->name;
-        }
-        if($request->description != null){
-            $room->description = $request->description;
-        }
-        if($request->max != null){
-            $room->max = $request->max;
-        }
-        if($request->price != null){
-            $room->base_price = $request->price;
-        }
-        
+        $type = room_type::where('name',$request->type_name)->first();
+        $room = room::where('id',$request->id)
+                    ->where('floor',$request->floor)
+                    ->where('type_id',$type->id)
+                    ->first();
         $room->avail = $request->status;
         $room->save();
-
-        return view('addRoom', compact('room'));
+        $success = "The rooms has been updated successfully!";
+        return redirect('/rooms/settings')->with('success', $success);
     }
     
     public function availRoomsView(){
-        $rooms = room::where('avail',1)->orderBy('id', 'asc')->get();
-        return view('rooms', compact('rooms'));
+        // $rooms = room::where('avail',1)->orderBy('id', 'asc')->get();
+        // return view('rooms', compact('rooms'));
     }
 
     public function busyRoomsView(){
-        $rooms = room::where('avail',0)->orderBy('id', 'asc')->get();
-        return view('rooms', compact('rooms'));
+        // $rooms = room::where('avail',0)->orderBy('id', 'asc')->get();
+        // return view('rooms', compact('rooms'));
     }
 
     public function resUpdateView(){
@@ -106,8 +105,9 @@ class HomeController extends Controller
 
     public function updateRes(Request $request){
         $this->validate($request, [
-            'room_id' => 'required',
-            'guest_id' => 'required',
+            'room_id' => 'required|exists:rooms,id',
+            'floor' => 'required|exists:rooms,floor',
+            'guest_id' => 'required|exists:guests,id',
             'in_date' => 'required|date',
         ]);
 
@@ -129,6 +129,7 @@ class HomeController extends Controller
         $del_reservation->out_day = $reservation->out_day;
         $del_reservation->out_month = $reservation->out_month;
         $del_reservation->out_year = $reservation->out_year;
+        $del_reservation->floor = $reservation->floor;
         $del_reservation->guest_id = $request->guest_id;
         $del_reservation->room_id = $request->room_id;
         $del_reservation->save();
@@ -141,5 +142,44 @@ class HomeController extends Controller
         
     }
 
+    public function TypeView(){
+        $types = room_type::get();
+        return view('RoomType', compact('types'));
+    } 
      
+    public function addType(Request $request){
+        
+        $this->validate($request, [
+            'name' => 'required|unique:room_types',
+            'max' => 'required|integer',
+            'price' => 'required|numeric',
+            'description' => 'required',
+        ]);
+
+        $type = new room_type();
+        $type->name = $request->name;
+        $type->max_occupancy = $request->max;
+        $type->base_price = $request->price;
+        $type->description = $request->description;
+        $type->save();
+
+        $status = "Sucessfully Added";
+        return redirect('/types/settings')->with('status', $status);
+    }
+ 
+    public function updateType(Request $request){
+        
+        $this->validate($request, [
+            'type_name' => 'required',
+        ]);
+
+        $type = room_type::where('name',$request->type_name)->first();
+        $type->max_occupancy = $request->max != null ? $request->max : $type->max_occupancy;
+        $type->base_price = $request->price != null ? $request->price : $type->base_price;
+        $type->description = $request->description != null ? $request->description : $type->description;
+        $type->save();
+
+        $status = " Sucessfully Updated";
+        return redirect('/types/settings')->with('status', $status);
+    } 
 }

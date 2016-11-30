@@ -21,6 +21,7 @@ class CreateDelReservations extends Migration
             $table->string('out_day', 255);
             $table->string('out_month', 255);
             $table->string('out_year', 255);
+            $table->integer('floor');
             $table->integer('room_id')
                 ->references('id')
                 ->on('rooms')

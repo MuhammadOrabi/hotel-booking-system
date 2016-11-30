@@ -36,6 +36,7 @@
                 <input type="hidden" name="room_id" value="{{ $dates[0] }}">
                 <input type="hidden" name="in_date" value="{{ $dates[1] }}">
                 <input type="hidden" name="out_date" value="{{ $dates[2] }}">
+                <input type="hidden" name="floor" value="{{ $dates[3] }}">
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button type="submit" class="btn btn-default">Book</button>

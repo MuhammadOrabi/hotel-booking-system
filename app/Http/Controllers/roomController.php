@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\guest;
 use App\reservation;
 use App\room;
-use App\guest;
+use App\room_type;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,66 @@ class roomController extends Controller
             'out_date' => 'required|date|after:in_date'
         ]);
     	
-    	$avail_rooms = room::where('avail',1)->withCount('reservations')->get();
+    	$dates = array($request->in_date, $request->out_date);
+    	return view('rooms', compact('dates'));
+    }
+
+	public function book(Request $request){
+		
+		$this->validate($request, [
+            'id' => 'required',
+            'email' => 'required|email|max:255',
+            'name' => 'required',
+            'room_id' => 'required|exists:rooms,id',
+            'in_date' => 'required|date|after:yesterday',
+            'out_date' => 'required|date|after:in_date',
+            'floor' => 'required|exists:rooms,floor'
+        ]);
+
+		$in_date = DateTime::createFromFormat("Y-m-d", $request->in_date);
+ 		$out_date = DateTime::createFromFormat("Y-m-d", $request->out_date);
+ 		
+ 		$guest = guest::where('id',$request->id)->first();
+ 		if($guest == null){
+ 			$guest = new guest();
+ 			$guest->id = $request->id;
+ 			$guest->name = $request->name;
+ 			$guest->email = $request->email;
+ 			$guest->save();
+ 		}
+        $reservation = new reservation();
+		$reservation->room_id = $request->room_id;
+		$reservation->guest_id = $request->id;
+		$reservation->in_day = $in_date->format("d");
+		$reservation->in_month = $in_date->format("m");
+		$reservation->in_year = $in_date->format("Y");
+		$reservation->out_day = $out_date->format("d");
+		$reservation->out_month = $out_date->format("m");
+		$reservation->out_year = $out_date->format("Y");
+        $reservation->floor = $request->floor;
+		$reservation->save();
+        return redirect('/')->with('success', 'Room Booked successfully');
+	} 
+
+	public function bookView(Request $request){
+        $this->validate($request, [
+            'id' => 'required|exists:rooms,id',
+            'in_date' => 'required|date|after:yesterday',
+            'out_date' => 'required|date|after:in_date',
+            'floor' => 'required|exists:rooms,floor'
+        ]);
+        $dates = array($request->id,$request->in_date, $request->out_date, $request->floor);
+        return view('bookView', compact('dates'));
+    }
+
+    public function getRoomsByType(Request $request){
+    	$this->validate($request, [
+            'in_date' => 'required|date|after:yesterday',
+            'out_date' => 'required|date|after:in_date',
+            'type_name' => 'required'
+        ]);
+    	$type = room_type::where('name',$request->type_name)->first();
+    	$avail_rooms = room::where('type_id',$type->id)->where('avail',1)->withCount('reservations')->get();
     	$check_in = new DateTime();
     	$check_out = new DateTime();
     	$rooms = array();
@@ -56,46 +116,7 @@ class roomController extends Controller
     	}
     	$dates = array($request->in_date, $request->out_date);
     	return view('rooms', compact('rooms'), compact('dates'));
-    }
-
-	public function book(Request $request){
-		
-		$this->validate($request, [
-            'id' => 'required',
-            'email' => 'required|email|max:255',
-            'name' => 'required'
-        ]);
-
-		$in_date = DateTime::createFromFormat("Y-m-d", $request->in_date);
- 		$out_date = DateTime::createFromFormat("Y-m-d", $request->out_date);
- 		
- 		$guest = guest::where('id',$request->id)->first();
- 		if($guest == null){
- 			$guest = new guest();
- 			$guest->id = $request->id;
- 			$guest->name = $request->name;
- 			$guest->email = $request->email;
- 			$guest->save();
- 		}
-
-		$reservation = new reservation();
-		$reservation->room_id = $request->room_id;
-		$reservation->guest_id = $request->id;
-		$reservation->in_day = $in_date->format("d");
-		$reservation->in_month = $in_date->format("m");
-		$reservation->in_year = $in_date->format("Y");
-		$reservation->out_day = $out_date->format("d");
-		$reservation->out_month = $out_date->format("m");
-		$reservation->out_year = $out_date->format("Y");
-		$reservation->save();
-
-		return view('welcome', compact('reservation'));
-	} 
-
-	public function bookView(Request $request){
-        $dates = array($request->id,$request->in_date, $request->out_date);
-        return view('bookView', compact('dates'));
-    }  
+    } 
 }
 
 
