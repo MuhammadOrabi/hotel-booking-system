@@ -181,5 +181,15 @@ class HomeController extends Controller
 
         $status = " Sucessfully Updated";
         return redirect('/types/settings')->with('status', $status);
+    }
+
+    public function reservationsView(){
+        return view('admin.reservations');
+    }
+
+    public function calView(){
+        $date = new DateTime();
+        $now = $date->format('m,d,Y');
+        return view('admin.cal', compact('now'));
     } 
 }

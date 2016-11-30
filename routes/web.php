@@ -54,3 +54,7 @@ Route::get('/types/settings','HomeController@TypeView');
 Route::post('/add/type','HomeController@addType');
 
 Route::post('/update/type','HomeController@updateType');
+
+Route::get('/reservations', 'HomeController@reservationsView');
+
+Route::get('/calendar', 'HomeController@calView');

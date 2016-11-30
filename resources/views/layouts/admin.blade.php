@@ -20,6 +20,7 @@
     <!-- styles -->
     <link href="/css/styles.css" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
+    @yield('style')
 
 <!-- Scripts -->
     <!-- Latest compiled and minified JavaScript -->
@@ -105,7 +106,7 @@
                     	<a href="{{ url('/home') }}"><i class="glyphicon glyphicon-home"></i> Dashboard</a>
                 	</li>
                     <li @if($currentPath == '#') class="current" @endif>
-                    	<a href="#"><i class="glyphicon glyphicon-calendar"></i> Calendar</a>
+                    	<a href="{{ url('/calendar') }}"><i class="glyphicon glyphicon-calendar"></i> Calendar</a>
                 	</li>
                     <li class="submenu">
                          <a href="#">
@@ -131,8 +132,8 @@
                         	</li>
                         </ul>
                     </li>
-                    <li @if($currentPath == '#') class="current" @endif>
-                    	<a href="#"><i class="glyphicon glyphicon-list"></i> Tables</a>
+                    <li @if($currentPath == '/reservations') class="current" @endif>
+                    	<a href="{{ url('/reservations') }}"><i class="glyphicon glyphicon-list"></i>Reservations</a>
                 	</li>
                     <li @if($currentPath == '#') class="current" @endif>
                     	<a href="#"><i class="glyphicon glyphicon-record"></i> Buttons</a>
@@ -166,8 +167,8 @@
      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="/js/app.js"></script>
-
+    <script src="/js/app.js"></script>
+    @yield('scripts')
     <script src="/js/custom.js"></script>  
     </body>
 </html>
