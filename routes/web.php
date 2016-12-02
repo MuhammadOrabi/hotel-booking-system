@@ -21,6 +21,9 @@ Route::get('/', function () {
 });
 
 
+
+
+
 Route::post('/rooms', 'roomController@getRooms');
 
 Route::post('/type/rooms', 'roomController@getRoomsByType');
