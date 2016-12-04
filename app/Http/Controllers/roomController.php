@@ -8,6 +8,7 @@ use App\room;
 use App\room_type;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class roomController extends Controller
 {
@@ -61,6 +62,11 @@ class roomController extends Controller
 		$reservation->out_year = $out_date->format("Y");
         $reservation->floor = $request->floor;
 		$reservation->save();
+
+
+        $eventData = ['event' => 'BookingRoom', 'data' => 'Updates'];
+        Redis::publish('admin-channel', json_encode($eventData));
+
         return redirect('/')->with('success', 'Room Booked successfully');
 	} 
 

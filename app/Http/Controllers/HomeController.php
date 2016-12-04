@@ -8,6 +8,7 @@ use App\room;
 use App\room_type;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
 {

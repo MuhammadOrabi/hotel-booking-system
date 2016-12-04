@@ -1,5 +1,8 @@
 <?php
 
+use App\reservation;
+use App\room;
+use App\room_type;
 use Illuminate\Http\Request;
 
 /*
@@ -53,7 +56,17 @@ Route::group(['middleware' => 'api'], function() {
         	array_push($total, $arr);
         	$arr = array();
         }
-        $response = array("now" => $now, "nos" => $total);
+
+        //get rooms available with given date where in_year == 2016 && in_month == $request->date->format('m')
+        // $rooms = room::where('avail',1)->with('reservations')->with('room_type')->get();
+        $types = room_type::get();
+        $rooms = array();
+        foreach ($types as $type) {
+            $room = room::where('avail',1)->with('reservations')->get();
+            $x = ['type' => $type, 'rooms' => $room];
+            array_push($rooms, $x);
+        }
+        $response = array("now" => $now, "nos" => $total, "rooms" => $rooms);
         return response()->json($response);
 	
 	});
