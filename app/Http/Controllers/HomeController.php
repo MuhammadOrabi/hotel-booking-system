@@ -188,8 +188,9 @@ class HomeController extends Controller
     }
 
     public function calView(){
-        $date = new DateTime();
-        $now = $date->format('m,d,Y');
+        
+        $d = new DateTime(); 
+        $now = $d->format('d-m-Y');
         return view('admin.cal', compact('now'));
     } 
 }

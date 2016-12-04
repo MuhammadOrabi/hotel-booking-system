@@ -7,25 +7,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <!-- jQuery UI -->
-    <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
+    <!-- Styles -->
+    <link href="/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 
-    <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-    <!-- styles -->
-    <link href="/css/styles.css" rel="stylesheet">
-    <link href="/css/app.css" rel="stylesheet">
-    @yield('style')
 
-<!-- Scripts -->
+    <!-- Scripts -->
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script>window.Laravel = { csrfToken: '{{ csrf_token() }}' }</script>
+    
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
@@ -105,32 +100,23 @@
                     <li @if($currentPath == 'home') class="current" @endif>
                     	<a href="{{ url('/home') }}"><i class="glyphicon glyphicon-home"></i> Dashboard</a>
                 	</li>
-                    <li @if($currentPath == '#') class="current" @endif>
+                    <li @if($currentPath == '/calendar') class="current" @endif>
                     	<a href="{{ url('/calendar') }}"><i class="glyphicon glyphicon-calendar"></i> Calendar</a>
                 	</li>
-                    <li class="submenu">
-                         <a href="#">
-                            <i class="glyphicon glyphicon-list"></i> Rooms
-                            <span class="caret pull-right"></span>
-                         </a>
-                         <!-- Sub menu -->
-                         <ul>
-                   	  	    <li @if($currentPath == 'types/settings') class="current" @endif >
-                   	  	    	<a href="{{ url('/types/settings') }}">Room Types</a>
-               	  	    	</li>
-	                        <li @if($currentPath == 'rooms/settings') class="current" @endif>
-	                        	<a href="{{ url('/rooms/settings') }}" >Rooms</a>
-	                        </li>
-	                        <li @if($currentPath == 'reservation/update') class="current" @endif>
-	                        	<a href="{{ url('/reservation/update') }}" >Cancel Reservations</a>
-	                        </li>
-	                        <li @if($currentPath == 'available/rooms') class="current" @endif>
-	                        	<a href="{{ url('/available/rooms') }}">list available rooms</a>
-                        	</li>
-	                        <li @if($currentPath == 'not_available/rooms') class="current" @endif>
-	                        	<a href="{{ url('/not_available/rooms') }}">list not available rooms</a>
-                        	</li>
-                        </ul>
+                    <li @if($currentPath == 'types/settings') class="current" @endif >
+                        <a href="{{ url('/types/settings') }}"><i class="glyphicon glyphicon-tasks"></i>Room Types</a>
+                    </li>
+                    <li @if($currentPath == 'rooms/settings') class="current" @endif>
+                        <a href="{{ url('/rooms/settings') }}" ><i class="glyphicon glyphicon-tasks"></i>Rooms</a>
+                    </li>
+                    <li @if($currentPath == 'reservation/update') class="current" @endif>
+                        <a href="{{ url('/reservation/update') }}" ><i class="glyphicon glyphicon-tasks"></i>Cancel Reservations</a>
+                    </li>
+                    <li @if($currentPath == 'available/rooms') class="current" @endif>
+                        <a href="{{ url('/available/rooms') }}"><i class="glyphicon glyphicon-list"></i>list available rooms</a>
+                    </li>
+                    <li @if($currentPath == 'not_available/rooms') class="current" @endif>
+                        <a href="{{ url('/not_available/rooms') }}"><i class="glyphicon glyphicon-list"></i>list not available rooms</a>
                     </li>
                     <li @if($currentPath == '/reservations') class="current" @endif>
                     	<a href="{{ url('/reservations') }}"><i class="glyphicon glyphicon-list"></i>Reservations</a>
