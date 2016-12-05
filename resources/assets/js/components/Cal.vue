@@ -3,7 +3,6 @@
 		<div class="row">
 	        <div class="col-md-10">
 	            <div class="well">
-	            	<span v-for="n in 6" v-if="n == test">{{ test }}</span>
 	            	<h2 class="text-center">{{ now }}</h2>
 	            	<div class="row">
 		            	<div class="col-md-offset-4 col-md-4">
@@ -53,6 +52,7 @@
 	                                <td class="text-center" v-for="(room, index) in row.rooms">
 	                                	<span v-for="res in room.reservations">
 	                                		{{ res.in_day }} - {{ res.in_month }} - {{ res.in_year }}
+	                                		<br>
                                 		</span>
                                 	</td>
 	                        	</tr>
@@ -79,12 +79,11 @@
 				names: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
 				now:'',
 				newDate:'',
-				rooms: [],
-				test: 2
+				rooms: []
 			}
 		},
 		created(){
-			this.fetchData()
+			this.fetchData();
 			socket.on('admin-channel:BookingRoom', function(message) {
 				console.log("Update");
 				this.fetchData();
