@@ -51,6 +51,7 @@ class roomController extends Controller
  			$guest->email = $request->email;
  			$guest->save();
  		}
+        $room = room::where('id', $request->room_id)->where('floor',$request->floor)->first();
         $reservation = new reservation();
 		$reservation->room_id = $request->room_id;
 		$reservation->guest_id = $request->id;
@@ -61,6 +62,7 @@ class roomController extends Controller
 		$reservation->out_month = $out_date->format("m");
 		$reservation->out_year = $out_date->format("Y");
         $reservation->floor = $request->floor;
+        $reservation->room_type_id = $room->type_id;
 		$reservation->save();
 
 

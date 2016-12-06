@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
@@ -56,18 +57,21 @@ Route::group(['middleware' => 'api'], function() {
         	array_push($total, $arr);
         	$arr = array();
         }
-
-        //get rooms available with given date where in_year == 2016 && in_month == $request->date->format('m')
-        // $rooms = room::where('avail',1)->with('reservations')->with('room_type')->get();
-        $types = room_type::get();
-        $rooms = array();
-        foreach ($types as $type) {
-            $room = room::where('avail',1)->with('reservations')->get();
-            $x = ['type' => $type, 'rooms' => $room];
-            array_push($rooms, $x);
-        }
-        $response = array("now" => $now, "nos" => $total, "rooms" => $rooms);
+        $date = new DateTime($request->date);
+        $type = room_type::where('name', $request->type)->first();
+        $reservations = $type->reservations()
+                             ->where('in_year',$date->format('Y'))
+                             ->where('in_month', $date->format('m'))
+                             ->orWhere(function ($query) use ($date, $type){
+                                    $query->where('room_type_id', $type->id)
+                                          ->where('out_year', $date->format('Y'))
+                                          ->where('out_month', $date->format('m'));
+                                        })
+                             ->get();
+        $rooms = room::where('avail', 1)->where('type_id',$type->id)->count();
+        $response = array("now" => $now, "nos" => $total, 'reservations' => $reservations, 'month' => $date->format('m'), 'rooms' => $rooms);
         return response()->json($response);
-	
-	});
+    
+    });
+
 });

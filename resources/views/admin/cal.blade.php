@@ -22,6 +22,9 @@
             @endif
         </div>
     </div>
-    <Cal date = "{{ $now }}">Loading...</Cal>
+    <?php $types = App\room_type::has('rooms')->get();?>
+    @foreach($types as $type)
+        <Cal date = "{{ $now }}" type="{{ $type->name }}">Loading...</Cal>
+    @endforeach
     </div>
 @stop

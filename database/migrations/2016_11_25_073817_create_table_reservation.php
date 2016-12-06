@@ -30,6 +30,10 @@ class CreateTableReservation extends Migration
                 ->references('id')
                 ->on('guests')
                 ->onDelete('cascade');
+            $table->integer('room_type_id')
+                ->references('id')
+                ->on('room_type')
+                ->onDelete('cascade');
             $table->date('created_at');
             $table->date('updated_at');
             $table->unique(['in_day', 'room_id', 'floor']);
