@@ -25,9 +25,10 @@
 	                                <td class="text-center" v-for="(value, key) in row" :name="value"> 
 	                                	{{ value }} <br> 
 	                                	<span v-if="value > 0">
-		                                	Busy rooms: {{ countBusy(value) }} 
+		                                	Busy rooms: <span style="font-weight:bold">{{ countBusy(value) }}</span> 
 		                                	<br>
-		                                	Free rooms: {{ rooms - countBusy(value) > 0 ? rooms - countBusy(value) : 0}}
+		                                	Free rooms: <span style="font-weight:bold">{{ rooms - countBusy(value) > 0 ? rooms - countBusy(value) : 0}}
+		                                	</span>
 	                                	</span>
 	                                </td>
 	                        	</tr>
@@ -54,7 +55,7 @@
 				names: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
 				now:'',
 				newDate:'',
-				month: 0,
+				day: {},
 				reservations: [],
 				mint: 0,
 				rooms: 0
@@ -77,7 +78,7 @@
 				this.$http.post('/api/postCalandar',{date: this.newDate, type: this.type}).then((response) => {
 					this.nos = response.body.nos;				    
 					this.now = response.body.now;
-					this.month = response.body.month;
+					this.day = response.body.date;
 					this.reservations = response.body.reservations;
 					this.rooms = response.body.rooms;		    
 				}, (response) => {
@@ -88,7 +89,7 @@
 				this.$http.post('/api/postCalandar',{date: this.date, type: this.type}).then((response) => {
 					this.nos = response.body.nos;				    
 					this.now = response.body.now;
-					this.month = response.body.month;
+					this.day = response.body.date;
 					this.rooms = response.body.rooms;
 					this.reservations = response.body.reservations;
 				}, (response) => {
@@ -97,17 +98,11 @@
 			},
 			countBusy(day){
 				var count = 0;
+				var date = new Date(this.day);
+				date.setDate(day);
 				this.reservations.forEach(function(res) {
-					if (res.in_month == this.month) {
-						if (day >= res.in_day && day <= res.out_day && res.out_month == this.month) {
-							count += 1;
-						}else if(day >= res.in_day && day <= res.out_day && res.out_month > this.month){
-							count += 1;
-						}
-					}else if(res.out_month == this.month){
-						if (day <= res.out_day) {
-							count += 1;
-						}
+					if(res.start_date <= date && res.end_date >= date){
+						count += 1;
 					}
 				}.bind(this));
 				return count;

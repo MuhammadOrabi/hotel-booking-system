@@ -16,7 +16,6 @@
             {{ session('success') }}
         </div>
     @endif
-    
     <div class="panel panel-default">
         <div class="panel-heading text-center">
             <h3 class="panel-title">~Welcome and Please make a reservation~</h3>
@@ -36,5 +35,6 @@
             </form>  
         </div>
     </div>
+    <Book></Book>
 </div>
 @endsection

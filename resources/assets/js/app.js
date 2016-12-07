@@ -20,10 +20,12 @@ import Vue from 'vue'
 
 
 import Cal from './components/Cal.vue'
+import Book from './components/Book.vue'
 
 var app = new Vue({
 	el: '#app',
 	components: {
-		Cal
+		Cal,
+		Book
 	}
 })

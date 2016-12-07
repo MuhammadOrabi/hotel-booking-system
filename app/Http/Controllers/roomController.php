@@ -66,7 +66,7 @@ class roomController extends Controller
 		$reservation->save();
 
 
-        $eventData = ['event' => 'BookingRoom', 'data' => 'Updates'];
+        $eventData = ['event' => 'BookingRoom', 'data' => 'Booking room ' . $reservations->room_id];
         Redis::publish('admin-channel', json_encode($eventData));
 
         return redirect('/')->with('success', 'Room Booked successfully');

@@ -15,12 +15,8 @@ class CreateTableReservation extends Migration
     {
         Schema::create('reservations', function ($table) {
             $table->increments('id');
-            $table->string('in_day', 255);
-            $table->string('in_month', 255);
-            $table->string('in_year', 255);
-            $table->string('out_day', 255);
-            $table->string('out_month', 255);
-            $table->string('out_year', 255);
+            $table->date('start_date');
+            $table->date('end_date');
             $table->integer('floor');
             $table->integer('room_id')
                 ->references('id')
@@ -36,7 +32,7 @@ class CreateTableReservation extends Migration
                 ->onDelete('cascade');
             $table->date('created_at');
             $table->date('updated_at');
-            $table->unique(['in_day', 'room_id', 'floor']);
+            $table->unique(['start_date', 'room_id', 'floor']);
         });
     }
 
