@@ -98,10 +98,10 @@
 			},
 			countBusy(day){
 				var count = 0;
-				var date = new Date(this.day);
-				date.setDate(day);
 				this.reservations.forEach(function(res) {
-					if(res.start_date <= date && res.end_date >= date){
+					var start = new Date(res.start_date);
+					var end = new Date(res.end_date)
+					if(start.getDate() <= day && end.getDate() >= day){
 						count += 1;
 					}
 				}.bind(this));

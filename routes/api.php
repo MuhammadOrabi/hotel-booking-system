@@ -81,12 +81,19 @@ Route::group(['middleware' => 'api'], function() {
 
 
     Route::post('/types', function(Request $request) {
-        $types = room_type::has('rooms')
-                          ->whereDoesntHave('reservations', function ($query) use ($request) {
-                                    $query->where('start_date', '<=' , $request->in)
-                                          ->where('end_date','>=', $request->out);
-                            })->get();
-        $response = array("types" => $types);
+        $types = room_type::has('rooms')->get();
+        $freeTypes = array();
+        foreach ($types as $type) {
+            $room = room::where('type_id', $type->id)
+                        ->whereDoesntHave('reservations', function ($query) use ($request) {
+                                        $query->where('start_date', '<=' , $request->in)
+                                              ->where('end_date','>=', $request->out);
+                                })->first();
+            if($room != null){
+                array_push($freeTypes, $room->room_type);
+            }
+        }
+        $response = array("types" => $freeTypes);
         return response()->json($response);
     });         
 
